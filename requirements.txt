@@ -1,0 +1,17 @@
+setuptools
+click
+pandas
+numpy
+matplotlib
+plotly
+seaborn
+streamlit
+scikit-learn
+sktime
+scipy
+tsfresh
+statsmodels
+prophet
+jupyterlab
+wandb
+dvc
