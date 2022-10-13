@@ -24,7 +24,13 @@
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
 
-				}
+				},
+				"extensions": [
+					"ms-python.python",
+					"redhat.vscode-yaml",
+					"ms-vscode.makefile-tools",
+					"bungcip.better-toml"
+				]
 			},
 			
 			// // Add the IDs of extensions you want installed when the container is created.
@@ -41,5 +47,8 @@
 	// extension caching
 	"mounts": [
 		"source=extension_cache,target=/root/.vscode-server/extensions,type=volume"
-	]
+	],
+
+	// Install src package
+	"onCreateCommand": ["pip", "install", "-e", "."]
 }
