@@ -16,3 +16,5 @@ jupyterlab==3.4.8
 wandb==0.13.4
 dvc==2.30.0
 mlflow==1.29.0
+openpyxl==3.0.10
+odfpy==1.4.1
