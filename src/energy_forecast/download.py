@@ -1,8 +1,7 @@
-from py_compile import _get_default_invalidation_mode
 import requests
 from pathlib import Path
 from .utils import repo_root
-from warnings import warn
+from loguru import logger
 
 REPO_ROOT = Path(repo_root())
 
@@ -10,7 +9,7 @@ REPO_ROOT = Path(repo_root())
 def download_file(url, dest_file):
     dest_file = Path(dest_file)
     if dest_file.is_file():
-        warn('dest_file already exists, overwriting.') 
+        logger.warning('dest_file already exists, overwriting.') 
 
     r = requests.get(url, allow_redirects=True)
     if not r.ok: 

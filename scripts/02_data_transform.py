@@ -5,6 +5,7 @@ from energy_forecast.transform import clean_energy_data, clean_temp_data, \
 from pathlib import Path
 import click
 import pandas as pd
+from loguru import logger
 
 REPO_ROOT = Path(repo_root())
 DATA_RAW = REPO_ROOT / 'data' / 'raw'
@@ -20,34 +21,34 @@ RAIN_SHEET = '7_4'
 
 @click.command
 def main():
-    print('Starting data transform script')
+    logger.info('Starting data transform script')
 
-    print('Loading energy .ods data')
+    logger.info('Loading energy .ods data')
     energy = load_ods(ENERGY_PATH, ENERGY_SHEETNAME)
 
-    print('Transforming energy data')
+    logger.info('Transforming energy data')
     energy = clean_energy_data(energy)
 
-    print('Loading weather .ods data')
+    logger.info('Loading weather .ods data')
     temp = load_ods(WEATHER_PATH, TEMP_SHEET)
     wind = load_ods(WEATHER_PATH, WIND_SHEET)
     sun = load_ods(WEATHER_PATH, SUN_SHEET)
     rain = load_ods(WEATHER_PATH, RAIN_SHEET)
 
-    print('Transforming weather data')
+    logger.info('Transforming weather data')
     temp = clean_temp_data(temp)
     wind = clean_wind_data(wind)
     sun = clean_sun_data(sun)
     rain = clean_rain_data(rain)
 
-    print('Joining datasets')
+    logger.info('Joining datasets')
     weather = pd.concat([temp, wind, sun, rain], join='outer', axis=1)
     combined = pd.concat([energy, weather], join='outer', axis=1)
 
-    print('Saving combined dataframe to disk')
+    logger.info('Saving combined dataframe to disk')
     combined.to_csv(DATA_INTERIM / 'transformed_energy_weather.csv')
     
-    print('Finished data transform script')
+    logger.info('Finished data transform script')
 
 
 if __name__ == "__main__":

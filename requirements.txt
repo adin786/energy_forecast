@@ -18,3 +18,4 @@ dvc==2.30.0
 mlflow==1.29.0
 openpyxl==3.0.10
 odfpy==1.4.1
+loguru==0.6.0
