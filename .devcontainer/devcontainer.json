@@ -29,7 +29,8 @@
 					"ms-python.python",
 					"redhat.vscode-yaml",
 					"ms-vscode.makefile-tools",
-					"bungcip.better-toml"
+					"bungcip.better-toml",
+					"GrapeCity.gc-excelviewer"
 				]
 			},
 			

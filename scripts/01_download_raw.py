@@ -3,6 +3,9 @@ from energy_forecast.utils import repo_root
 from pathlib import Path
 import click
 from loguru import logger
+import sys
+logger.remove()
+logger.add(sys.stderr, level='INFO')
 
 REPO_ROOT = Path(repo_root())
 URL_ENERGY = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1012959/Total_Energy_ODS.ods'

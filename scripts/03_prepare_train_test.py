@@ -5,6 +5,9 @@ from pathlib import Path
 import click
 import pandas as pd
 from loguru import logger
+import sys
+logger.remove()
+logger.add(sys.stderr, level='INFO')
 
 
 REPO_ROOT = Path(repo_root())
