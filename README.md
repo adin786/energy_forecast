@@ -1,5 +1,7 @@
 # Energy_forecast
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This repo will be used to perform timeseries forecasting of energy demand based on historic energy data from the UK government.
 
 ## Data source
@@ -31,8 +33,8 @@ The following `make` commands are configured.  All analysis notebooks and script
 
 ```
 make requirements       # install python dependencies
-make raw_data           # downloads raw data files
-make transform_data     # cleaned & transformed dataset
+make data               # prepare all data files
+make style
 ```
 
 ## Data cleaning

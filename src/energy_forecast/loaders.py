@@ -10,7 +10,7 @@ def load_ods(path: str, sheet_name: str) -> pd.DataFrame:
         df = pd.read_excel(
             path,
             sheet_name=sheet_name,
-            engine='odf',
+            engine="odf",
         )
     return df
 
@@ -22,6 +22,6 @@ def load_ods_sheetnames(path: str) -> list:
         sheets = pd.read_excel(
             path,
             sheet_name=None,
-            engine='odf',
+            engine="odf",
         )
     return list(sheets.keys())

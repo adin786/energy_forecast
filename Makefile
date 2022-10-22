@@ -1,4 +1,4 @@
-.PHONY: clean requirements raw_data transform_data preprocess_data
+.PHONY: clean requirements raw_data transform_data preprocess_data style data
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -17,7 +17,6 @@ clean:
 
 ## Install Python Dependencies
 requirements:
-	python -m pip install -U pip setuptools wheel
 	python -m pip install -r requirements.txt
 
 # Transform into cleaned csv file
@@ -46,4 +45,8 @@ $(Y_PREPROCESSED) $(X_PREPROCESSED): $(TRANSFORMED_CSV)
 # Preprocessed train-test splits
 preprocess_data: $(Y_PREPROCESSED) $(X_PREPROCESSED)
 
+data: preprocess_data
 
+style:
+	black ./src
+	black ./scripts
