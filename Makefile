@@ -38,14 +38,13 @@ raw_data: $(ENERGY_ODS) $(WEATHER_ODS)
 # Transform into a sanitised csv file
 transform_data: $(TRANSFORMED_CSV)
 
-
 $(Y_PREPROCESSED) $(X_PREPROCESSED): $(TRANSFORMED_CSV)
 	python scripts/03_prepare_train_test.py
 
 # Preprocessed train-test splits
 preprocess_data: $(Y_PREPROCESSED) $(X_PREPROCESSED)
 
-data: preprocess_data
+data: $(Y_PREPROCESSED) $(X_PREPROCESSED)
 
 style:
 	black ./src

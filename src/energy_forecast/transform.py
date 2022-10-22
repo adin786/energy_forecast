@@ -40,6 +40,7 @@ def clean_energy_data(df: DataFrame) -> DataFrame:
         "primary electricity - net imports": "elec_import",
         "primary electricity - wind, solar and hydro": "elec_renewable",
         "primary electricity - nuclear": "elec_nuclear",
+        "unadjusted total": "total_energy",
     }
 
     # Run a sequence of chained pandas methods to clean the raw input

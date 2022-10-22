@@ -1,4 +1,4 @@
-datetime,unadjusted total,coal,petroleum,natural gas,bioenergy & waste,elec_nuclear,elec_renewable,elec_import,temp,wind,sun,rain
+datetime,total_energy,coal,petroleum,natural gas,bioenergy & waste,elec_nuclear,elec_renewable,elec_import,temp,wind,sun,rain
 1991-01-01,,,,,,,,,3.7,,,
 1991-02-01,,,,,,,,,2.4,,,
 1991-03-01,,,,,,,,,7.8,,,

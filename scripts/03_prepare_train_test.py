@@ -30,7 +30,7 @@ def main():
         "rain": "mm",
     }
     energy_cols = {
-        "unadjusted total": "mtoe",
+        "total_energy": "mtoe",
         "coal": "mtoe",
         "petroleum": "mtoe",
         "natural gas": "mtoe",
@@ -45,7 +45,7 @@ def main():
     logger.debug(f"Shape of overall df after crop: {df.shape}")
 
     splits = temporal_train_test_split(
-        df["unadjusted total"], df[weather_cols.keys()], test_size=0.25
+        df[["total_energy"]], df[weather_cols.keys()], test_size=0.25
     )
     y_train, y_test, x_train, x_test = splits
     logger.debug(f"Shape of resulting splits: {[a.shape for a in splits]}")
