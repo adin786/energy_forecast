@@ -30,7 +30,8 @@
 					"redhat.vscode-yaml",
 					"ms-vscode.makefile-tools",
 					"bungcip.better-toml",
-					"GrapeCity.gc-excelviewer"
+					"GrapeCity.gc-excelviewer",
+					"eamodio.gitlens"
 				]
 			},
 			
