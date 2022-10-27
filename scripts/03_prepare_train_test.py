@@ -23,38 +23,16 @@ def main():
     logger.info("Starting prepare train_test script")
     df = load_and_set_types(DATA_FILE_PATH)
 
-    weather_cols = {
-        "temp": "degC",
-        "wind": "knots",
-        "sun": "hours",
-        "rain": "mm",
-    }
-    energy_cols = {
-        "total_energy": "mtoe",
-        "coal": "mtoe",
-        "petroleum": "mtoe",
-        "natural gas": "mtoe",
-        "bioenergy & waste": "mtoe",
-        "elec_nuclear": "mtoe",
-        "elec_renewable": "mtoe",
-        "elec_import": "mtoe",
-    }
-    combined_cols = dict(**energy_cols, **weather_cols)
-
     df = crop(df, start="2001-01-01", end="2022-06-01")
     logger.debug(f"Shape of overall df after crop: {df.shape}")
 
-    splits = temporal_train_test_split(
-        df[["total_energy"]], df[weather_cols.keys()], test_size=0.25
-    )
-    y_train, y_test, x_train, x_test = splits
-    logger.debug(f"Shape of resulting splits: {[a.shape for a in splits]}")
+    train, test = temporal_train_test_split(df, test_size=0.25)
+    logger.debug(f"Shape of resulting splits: {[a.shape for a in [train, test]]}")
+    logger.info("Temporal split complete")
 
     logger.info("Saving to disk")
-    y_train.to_csv(DATA_PROCESSED / "y_train.csv")
-    y_test.to_csv(DATA_PROCESSED / "y_test.csv")
-    x_train.to_csv(DATA_PROCESSED / "x_train.csv")
-    x_test.to_csv(DATA_PROCESSED / "x_test.csv")
+    train.to_csv(DATA_PROCESSED / "train.csv")
+    test.to_csv(DATA_PROCESSED / "test.csv")
 
     logger.info("Done")
 
