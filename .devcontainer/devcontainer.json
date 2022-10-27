@@ -48,7 +48,8 @@
 
 	// extension caching
 	"mounts": [
-		"source=extension_cache,target=/root/.vscode-server/extensions,type=volume"
+		"source=extension_cache,target=/root/.vscode-server/extensions,type=volume",
+		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/root/.aws,type=bind"
 	],
 
 	// Install src package

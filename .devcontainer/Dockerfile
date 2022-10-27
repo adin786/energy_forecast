@@ -21,6 +21,7 @@ RUN --mount=type=cache,target=/root/.cache \
     python -m pip install \
     pip==22.2.2 \
     awscli==1.25.97 \
+    boto3==1.25.3 \
     jupyterlab==3.4.8 \
     ipywidgets==8.0.2.\
     black==22.10.0 \
