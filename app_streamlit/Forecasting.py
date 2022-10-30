@@ -25,8 +25,11 @@ energy trends, and discussion of forecasting model
 results.
 """
 
-# Plot 
+# init with plot before forecast
+# 
 
 selected_date = st.date_input("Select a target date for the forecast")
 
 btn_state = st.buttom()
+
+# Plot forecast with conf intervals
