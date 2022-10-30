@@ -1,3 +1,8 @@
+# Resources
+# - https://nquayson.com/aws-lambda-function-url-using-terraform-quick-walkthrough
+# - https://itnext.io/creating-an-https-lambda-endpoint-without-api-gateway-eb0db1f6af7a
+# - https://www.deadbear.io/simple-serverless-fastapi-with-aws-lambda/
+
 terraform {
   required_providers {
     aws = {
