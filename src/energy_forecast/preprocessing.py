@@ -5,8 +5,8 @@ import sys
 logger.remove()
 logger.add(sys.stderr, filter=__name__, level="INFO")
 
-TARGET_COL = 'total_energy'
-EXPLANATORY_COLS = ['temp','wind','sun','rain']
+TARGET_COL = "total_energy"
+EXPLANATORY_COLS = ["temp", "wind", "sun", "rain"]
 
 
 def load_and_set_types(path: str) -> pd.DataFrame:
@@ -38,37 +38,23 @@ def add_year_month(df: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_y(df: pd.DataFrame) -> pd.DataFrame:
     """Extract target variable and add features"""
-    y_train = (
-        df
-        .loc[:, [TARGET_COL]]
-        .pipe(add_year_month)
-    )
+    y_train = df.loc[:, [TARGET_COL]].pipe(add_year_month)
     return y_train
 
 
 def prepare_x(df: pd.DataFrame) -> pd.DataFrame:
     """Extract explanatory variables and add features"""
-    x_train = (
-        df
-        .loc[:, EXPLANATORY_COLS]
-        .pipe(add_year_month)
-    )
+    x_train = df.loc[:, EXPLANATORY_COLS].pipe(add_year_month)
     return x_train
 
 
 def load_and_prepare_y(path: str) -> pd.DataFrame:
     """One line to load and prepare target variable y"""
-    df = (
-        load_and_set_types(path)
-        .pipe(prepare_y)
-    )
+    df = load_and_set_types(path).loc[:, [TARGET_COL]].to_period("M")
     return df
 
 
 def load_and_prepare_x(path: str) -> pd.DataFrame:
     """One line to load and prepare explanatory variables x"""
-    df = (
-        load_and_set_types(path)
-        .pipe(prepare_x)
-    )
+    df = load_and_set_types(path).loc[:, EXPLANATORY_COLS].to_period("M")
     return df
