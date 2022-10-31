@@ -13,35 +13,48 @@ The datasets were downloaded from data.gov.uk and are openly available.  Specifi
 
 Data ingest from the above pages is fully scripted.  In theory these scripts could be re-run in future to get the most up-to-date tables, however the exact file formatting has been known to be adjusted over time.  You may therefore need to update the data cleaning/transformation scripts.
 
-For convenience, snapshots of the source data (as of Oct 2022) are checked into the repo for archival.
+For reproducibility, all analysis in this repo was performed on the above tables dated Oct 2022.  Raw files for this date are checked into the repo under `data/raw`.
 
-## Requirements
+## Data Engineering / Cleaning
 
-For maximum reproducibility all development was done inside a vscode devcontainer, see `.devcontainer/Dockerfile`. Open this folder with VSCode to access it.
-
-Alternatively you may directly install `requirements.txt` and also the included `energy_forecast` package to make the code work.  This has been developed with Python 3.9.13.
-
-```bash
-git clone https://github.com/adin786/energy_forecast.git
-cd energy_forecast
-pip install -r requirements.txt
-pip install git+https://github.com/adin786/energy_forecast.git
-```
-
-## Makefile
-The following `make` commands are configured.  All analysis notebooks and scripts expect these files to exist.
-
-```
-make requirements       # install python dependencies
-make data               # prepare all data files
-make style
-```
-
-## Data cleaning
-...in progress
+- Data files parsed, transformed into monthly timeseries dataframe.
+- Temporal train-test split (80:20) applied.
+- Target variable (for forecasting) set as "Total Energy" consumption.
+- Saved as .csv
+- DVC used for data version control, remote stored in GDrive
+- ...
 
 ## Exploration
-...in progress
+
+- See `notebooks/03_data_exploration.ipynb` for visuals and summary
+- ...
 
 ## Forecasting
-...in progress
+
+- Variety of forecaster models trained
+- Mlflow used for experiment tracking
+- ...
+
+## Deployment
+
+- Model deployed for inference as REST-api
+- Hosted as serverless Lambda function on AWS
+- Streamlit web-app for interactive use
+- ...
+
+## Requirements / Reproducibility
+
+All code is developed inside a vscode devcontainer. For configuration, see `.devcontainer/Dockerfile`. Clone and open this repo folder with VSCode to build and attach to the dev environment.  
+
+All code developed for `Python 3.9.13`.
+
+## Helpful commands
+
+See `Makefile` for some useful commands like: 
+
+```
+make requirements       # install dependencies
+make data               # process all data
+make style              # apply black formatter
+
+```
