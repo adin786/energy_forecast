@@ -1,3 +1,8 @@
+[build-system]
+# requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "energy_forecast"
 description = "energy_forecast python package"
@@ -17,10 +22,5 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["black"]
 
-[build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
-
-[tools.setuptools.packages.find]
-where = ["src"]
-include = ["energy_forecast*"]
+[tool.setuptools]
+packages = ["energy_forecast"]

@@ -19,6 +19,11 @@ logger.add(sys.stderr, filter=__name__, level=LEVEL)
 REPO_ROOT = Path(repo_root())
 
 
+# class TempLogger(object):
+#     def __init__(self):
+
+
+
 class Model:
     def __init__(self, estimator, *args, **kwargs) -> None:
         self.model = estimator(*args, **kwargs)
@@ -75,7 +80,7 @@ class Model:
             self.run_name = run
 
             with redirect_stdout(f1), redirect_stderr(f2):
-                self.tmp_logger = logger.add(sys.stderr, filter=__name__, level=LEVEL)
+                # self.tmp_logger = logger.add(sys.stderr, filter=__name__, level=LEVEL)
 
                 logger.debug("FIT: starting mlflow tracking")
                 mlflow.log_params(self.params)
