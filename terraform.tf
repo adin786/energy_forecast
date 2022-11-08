@@ -14,7 +14,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-west-1"
+  region = "eu-west-2"
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
@@ -33,21 +33,27 @@ resource "aws_iam_role" "iam_for_lambda" {
   })
 }
 
-resource "aws_lambda_function" "example_lambda" {
-  filename         = "package.zip"
-  function_name    = "blog-shanenolan-dev"
+data "archive_file" "zip" {
+  type        = "zip"
+  source_dir = "${path.module}/app_lambda/"
+  output_path = "${path.module}/app_lambda.zip"
+}
+
+resource "aws_lambda_function" "energy_forecast_lambda" {
+  filename         = data.archive_file.zip.output_path
+  source_code_hash = data.archive_file.zip.output_base64sha256
+  function_name    = "energy_forecast"
   role             = aws_iam_role.iam_for_lambda.arn
-  handler          = "lambda_function_url_terraform.main.lambda_handler"
-  source_code_hash = filebase64sha256("package.zip")
+  handler          = "app.lambda_handler"
   runtime          = "python3.9"
 }
 
 resource "aws_lambda_function_url" "lambda_function_url" {
-  function_name      = aws_lambda_function.example_lambda.arn
+  function_name      = aws_lambda_function.energy_forecast_lambda.arn
   authorization_type = "NONE"
 }
 
 output "function_url" {
-  description = "Function URL."
+  description = "Energy forecasting for uk grid consumption"
   value       = aws_lambda_function_url.lambda_function_url.function_url
 }

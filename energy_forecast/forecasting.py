@@ -23,7 +23,6 @@ REPO_ROOT = Path(repo_root())
 #     def __init__(self):
 
 
-
 class Model:
     def __init__(self, estimator, *args, **kwargs) -> None:
         self.model = estimator(*args, **kwargs)

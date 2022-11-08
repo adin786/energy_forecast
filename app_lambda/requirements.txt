@@ -1,0 +1,3 @@
+pandas==1.5.0
+sktime==0.13.4
+mlflow==1.29.0

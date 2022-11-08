@@ -1,4 +1,5 @@
-.PHONY: clean requirements raw_data transform_data preprocess_data style data
+.PHONY: clean requirements raw_data transform_data preprocess_data style data streamlit
+.PHONY: init tf_apply lambda_reqs
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -46,5 +47,20 @@ preprocess_data: $(PREPROCESSED)
 data: $(PREPROCESSED) $(PREPROCESSED)
 
 style:
-	black ./src
-	black ./scripts
+	black ./energy_forecast \
+		./app_lambda \
+		./app_streamlit \
+		./scripts
+
+streamlit:
+	streamlit run ./app_streamlit/Home_Page.py
+
+init:
+	terraform init
+
+lambda_reqs:
+	pip install --target ./app_lambda -r ./app_lambda/requirements.txt
+
+tf_apply:
+	terraform plan
+	terraform apply

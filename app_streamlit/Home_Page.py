@@ -2,16 +2,20 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import energy_forecast as ef
+from energy_forecast.utils import repo_root
+from energy_forecast.preprocessing import load_and_set_types
 from pathlib import Path
 
-REPO_ROOT = Path(ef.repo_root())
+REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
+
 
 @st.cache
 def load_df(path):
-    return ef.loaders.load_and_fix_types(path)
-    
-df = load_df(DATA_DIR / "processed" / "df_train.csv")
+    return load_and_set_types(path)
+
+
+df = load_df(DATA_DIR / "processed" / "train.csv")
 
 st.title("Energy consumption forecasting (UK)")
 
@@ -25,8 +29,8 @@ energy trends, and discussion of forecasting model
 results.
 """
 
-# Plot 
+# Plot
 
 selected_date = st.date_input("Select a target date for the forecast")
 
-btn_state = st.buttom()
+btn_state = st.button('Process')

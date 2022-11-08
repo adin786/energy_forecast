@@ -6,6 +6,7 @@
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
+	"runArgs": ["--env-file",".env"],
 	
 	// Forward Jupyter port locally
 	"forwardPorts": [8888],
