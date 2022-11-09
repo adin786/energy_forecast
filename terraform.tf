@@ -17,6 +17,15 @@ provider "aws" {
   region = "eu-west-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "energy-forecast"
+    key    = "terraform/state"
+    region = "eu-west-2"
+  }
+}
+
+
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
