@@ -6,4 +6,4 @@
 **/mlruns
 **/*.log
 .terraform*
-**/*.tfstate
+**/*.tfstate*

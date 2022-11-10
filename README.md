@@ -37,10 +37,13 @@ For reproducibility, all analysis in this repo was performed on the above tables
 
 ## Deployment
 
-- Model deployed for inference as REST-api
-- Hosted as serverless Lambda function on AWS
-- Streamlit web-app for interactive use
-- ...
+- Deploy model inference api as a **serverless lambda function**
+- Deploy interactive front-end as **Streamlit web-app**.
+  - Keep lightweight front-end by abstracting all ML code to lambda.
+- Using **Docker multi-stage builds** to keep image size small.
+- Using **Terraform** to deploy all cloud resources.
+- Potential:
+    - Github actions for continuous deployment [see link](https://towardsdatascience.com/rapid-prototyping-using-terraform-github-action-docker-and-streamlit-in-gcp-e623ae3fdd54).
 
 ## Requirements / Reproducibility
 
