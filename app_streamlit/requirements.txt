@@ -1,3 +1,5 @@
 pandas
 sktime
 boto3
+plotly
+git+https://github.com/adin786/energy_forecast@dev
