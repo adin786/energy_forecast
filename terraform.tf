@@ -66,3 +66,28 @@ output "function_url" {
   description = "Energy forecasting for uk grid consumption"
   value       = aws_lambda_function_url.lambda_function_url.function_url
 }
+
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+      version = "~> 2.13.0"
+    }
+  }
+}
+
+provider "docker" {}
+
+resource "docker_image" "lambda" {
+  name         = "lambda:latest"
+  keep_locally = false
+}
+
+resource "docker_container" "lambda_container" {
+  image = docker_image.lambda.latest
+  name  = "lambda_container"
+  ports {
+    internal = 8080
+    external = 8000
+  }
+}

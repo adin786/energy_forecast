@@ -1,13 +1,56 @@
-FROM public.ecr.aws/lambda/python:3.8
+# ------
+# multi stage build from an alternative base image
+# ------
 
-# Copy function code
-COPY app_lambda ${LAMBDA_TASK_ROOT}
+# Define global args
+ARG FUNCTION_DIR="/home/app/"
 
-# Install the function's dependencies using file requirements.txt
-# from your project folder.
+# Build stage:
+FROM python:3.9.13-buster AS builder
 
-COPY ./app_lambda/requirements.txt .
-RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+# Install a full C toolchain and C build-time dependencies for
+# everything we're going to need.
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends --assume-yes \
+      build-essential
+      # libpq-dev
 
-# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+# Create the virtual environment.
+RUN python3 -m venv /venv
+ENV PATH=/venv/bin:$PATH
+
+# Install lambda runtime interface client
+# Install Python dependencies to virtual environment
+ARG FUNCTION_DIR
+WORKDIR ${FUNCTION_DIR}
+RUN pip install awslambdaric
+COPY lambda_app/requirements.txt .
+RUN pip install -r requirements.txt
+
+
+# Final stage:
+FROM python:3.9.13-slim-buster
+
+# Copy the virtual environment from the first stage.
+COPY --from=builder /venv /venv
+ENV PATH=/venv/bin:$PATH
+
+# Copy the application in.
+ARG FUNCTION_DIR
+WORKDIR ${FUNCTION_DIR} 
+# RUN mkdir -p ${FUNCTION_DIR}
+COPY lambda_app/* .
+CMD ["./app.py"]
+
+# Add lambda runtime interface emulator for local testing
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+COPY entry.sh /
+RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
+ENTRYPOINT [ "/entry.sh" ]
 CMD [ "app.lambda_handler" ]
+
+# test the image
+# docker run -p 9000:8080 lambda/python:3.9-alpine3.12
+
+# curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
