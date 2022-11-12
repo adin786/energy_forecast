@@ -28,6 +28,7 @@ def generate_processed_data():
         fs = DVCFileSystem(".")
         with fs.open("data/processed/train.csv") as f, st.spinner('Syncing datafile using DVC[S3]'):
             df = pd.read_csv(f, index_col=0)
+            TRAIN_CSV.parent.mkdir(parents=True)
             df.to_csv(TRAIN_CSV)
             time.sleep(3)
 
