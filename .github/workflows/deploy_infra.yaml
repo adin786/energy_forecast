@@ -1,0 +1,42 @@
+# https://towardsaws.com/build-push-docker-image-to-aws-ecr-using-github-actions-8396888a8f9e
+
+name: Deploy infrastructure
+
+on:
+  workflow_dispatch
+
+jobs:
+  tf_fmt:
+    name: Deploy resources with terraform
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.0.0
+      
+    - name: Terraform Init
+      run: terraform init
+      
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color
+      
+    - run: echo ${{ steps.plan.outputs.stdout }}
+    - run: echo ${{ steps.plan.outputs.stderr }}
+    - run: echo ${{ steps.plan.outputs.exitcode }}
+      
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: terraform apply -no-color -auto-approve
