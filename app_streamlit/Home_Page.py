@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import energy_forecast as ef
 from energy_forecast.utils import repo_root
+print(ef.__dict__)
 from energy_forecast.preprocessing import load_and_set_types
 from energy_forecast.deploy.aws_lambda import invoke_lambda_function
 from pathlib import Path
@@ -27,7 +28,7 @@ UK monthly energy consumption.
 
 Use the sidebar to switch between this 
 interactive forecaster tool, a visual analysis of 
-energy trends, and discussion of forecasting model 
+energy trends data, and discussion of forecasting model 
 results.
 """
 
