@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title('EDA')
+st.title("EDA")
 """
 Exploratory data analysis
 """

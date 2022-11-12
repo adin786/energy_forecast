@@ -1,4 +1,4 @@
 import streamlit as st
 
-st.title('Timeseries')
+st.title("Timeseries")
 """Timeseries page"""

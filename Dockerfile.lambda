@@ -25,7 +25,7 @@ ENV PATH=/venv/bin:$PATH
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
 RUN pip install awslambdaric
-COPY lambda_app/requirements.txt .
+COPY app_lambda/requirements.txt ./
 RUN pip install -r requirements.txt
 
 
@@ -33,24 +33,21 @@ RUN pip install -r requirements.txt
 FROM python:3.9.13-slim-buster
 
 # Copy the virtual environment from the first stage.
-COPY --from=builder /venv /venv
+COPY --from=builder /venv/ /venv/
 ENV PATH=/venv/bin:$PATH
 
 # Copy the application in.
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR} 
-# RUN mkdir -p ${FUNCTION_DIR}
-COPY lambda_app/* .
-CMD ["./app.py"]
+COPY app_lambda/* ./
 
 # Add lambda runtime interface emulator for local testing
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
-COPY entry.sh /
+COPY app_lambda/entry.sh /
 RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
 ENTRYPOINT [ "/entry.sh" ]
 CMD [ "app.lambda_handler" ]
 
 # test the image
 # docker run -p 9000:8080 lambda/python:3.9-alpine3.12
-
 # curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'

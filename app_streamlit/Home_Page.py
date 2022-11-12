@@ -4,6 +4,7 @@ import plotly.express as px
 import energy_forecast as ef
 from energy_forecast.utils import repo_root
 from energy_forecast.preprocessing import load_and_set_types
+from energy_forecast.deploy.aws_lambda import invoke_lambda_function
 from pathlib import Path
 
 REPO_ROOT = Path(repo_root())
@@ -14,8 +15,9 @@ DATA_DIR = REPO_ROOT / "data"
 def load_df(path):
     return load_and_set_types(path)
 
-
-df = load_df(DATA_DIR / "processed" / "train.csv")
+@st.cache
+def get_inference_response(input_date):
+    return invoke_lambda_function('energy_forecast', payload={'input_date': str(input_date)})
 
 st.title("Energy consumption forecasting (UK)")
 
@@ -29,8 +31,27 @@ energy trends, and discussion of forecasting model
 results.
 """
 
-# Plot
+"""
+## Request a model prediction from the inference API
+
+The model is deployed as a serverless lambda function and we can query it 
+for a result using `boto3` pre-configured with AWS credentials
+"""
 
 selected_date = st.date_input("Select a target date for the forecast")
 
-btn_state = st.button('Process')
+btn_state = st.button("Process")
+
+if btn_state:
+    response = get_inference_response(selected_date)
+    st.write('The inference "server" responded with:')
+    st.write(response)
+    st.write('Try picking a different date further in the future and re-process')
+
+
+"""
+---
+## Display some energy usage data
+"""
+df = load_df(DATA_DIR / "processed" / "train.csv")
+st.write(df)

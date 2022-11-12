@@ -7,8 +7,12 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.9.0"
+      version = "~> 4.39.0"
     }
+    # docker = {
+    #   source = "kreuzwerker/docker"
+    #   version = "~> 2.23.0"
+    # }
   }
   required_version = "~> 1.0"
 }
@@ -42,27 +46,107 @@ resource "aws_iam_role" "iam_for_lambda" {
   })
 }
 
-data "archive_file" "zip" {
-  type        = "zip"
-  source_dir = "${path.module}/app_lambda/"
-  output_path = "${path.module}/app_lambda.zip"
-}
+# data "archive_file" "zip" {
+#   type        = "zip"
+#   source_dir = "${path.module}/app_lambda/"
+#   output_path = "${path.module}/app_lambda.zip"
+# }
+# 
+# resource "aws_lambda_function" "energy_forecast_lambda" {
+#   filename         = data.archive_file.zip.output_path
+#   source_code_hash = data.archive_file.zip.output_base64sha256
+#   function_name    = "energy_forecast"
+#   role             = aws_iam_role.iam_for_lambda.arn
+#   handler          = "app.lambda_handler"
+#   runtime          = "python3.9"
+# }
 
 resource "aws_lambda_function" "energy_forecast_lambda" {
-  filename         = data.archive_file.zip.output_path
-  source_code_hash = data.archive_file.zip.output_base64sha256
+  package_type     = "Image"
+  image_uri        = "081150070467.dkr.ecr.eu-west-2.amazonaws.com/energy_forecast/lambda:latest"
   function_name    = "energy_forecast"
   role             = aws_iam_role.iam_for_lambda.arn
-  handler          = "app.lambda_handler"
-  runtime          = "python3.9"
 }
 
 resource "aws_lambda_function_url" "lambda_function_url" {
   function_name      = aws_lambda_function.energy_forecast_lambda.arn
-  authorization_type = "NONE"
+  authorization_type = "AWS_IAM"
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["*"]
+    allow_headers     = ["date", "keep-alive"]
+    expose_headers    = ["keep-alive", "date"]
+    max_age           = 86400
+  }
 }
 
 output "function_url" {
   description = "Energy forecasting for uk grid consumption"
   value       = aws_lambda_function_url.lambda_function_url.function_url
 }
+
+
+# Configure monitoring/logging
+# https://technotrampoline.com/articles/how-to-configure-aws-lambda-cloudwatch-logging-with-terraform/
+
+resource "aws_cloudwatch_log_group" "function_log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.energy_forecast_lambda.function_name}"
+  retention_in_days = 7
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "aws_iam_policy" "iam_policy_for_logging" {
+  name   = "iam_policy_for_loggingy"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect : "Allow",
+        Resource : "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "logging_policy_attachment" {
+  role = aws_iam_role.iam_for_lambda.id
+  policy_arn = aws_iam_policy.iam_policy_for_logging.arn
+}
+
+
+
+# DOCKER CONTAINERS
+
+# provider "docker" {}
+
+# resource "docker_image" "lambda" {
+#   name = "lambda"
+#   build {
+#     path = "."
+#     tag  = ["lambda:latest"]
+#     dockerfile = "Dockerfile.lambda"
+#     label = {
+#       author : "Azam Din"
+#     }
+#   }
+#   triggers = {
+#     dir_sha1 = sha1(join("", [for f in fileset(path.module, "lambda_app/*") : filesha1(f)]))
+#     file_sha2 = filesha256("Dockerfile.lambda")
+#   }
+# }
+
+# resource "docker_container" "lambda_container" {
+#   image = docker_image.lambda.name
+#   name  = "lambda_container"
+#   ports {
+#     internal = 8080
+#     external = 8000
+#   }
+# }
