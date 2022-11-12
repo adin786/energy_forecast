@@ -3,7 +3,8 @@ import pandas as pd
 import plotly.express as px
 import energy_forecast as ef
 from energy_forecast.utils import repo_root
-print(ef.__dict__)
+import pydoc
+st.code(pydoc.render_doc(ef, "Help on %s"))
 st.write(ef.__dict__)
 with st.echo():
     from energy_forecast.preprocessing import load_and_set_types
