@@ -53,6 +53,13 @@
 		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/root/.aws,type=bind"
 	],
 
+	// Make docker cli available in container
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {
+			"version": "latest"
+		}
+	},
+
 	// Install src package
 	"onCreateCommand": ["pip", "install", "-e", "."]
 }
