@@ -23,6 +23,6 @@ def invokeLambdaFunction(
 
 if __name__ == "__main__":
     payloadObj = {"something": "1111111-222222-333333-bba8-1111111"}
-    response = invokeLambdaFunction(functionName="hello-world", payload=payloadObj)
+    response = invokeLambdaFunction(functionName="energy_forecast", payload=payloadObj)
     print(f"response:{response}")
     print(response["Payload"].read())
