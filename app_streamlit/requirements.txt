@@ -1,5 +1,7 @@
-pandas
-sktime
-boto3
-plotly
+pandas==1.5.0
+matplotlib==3.5.3
+plotly==5.10.0
+seaborn==0.12.0
+streamlit==1.13.0
+loguru==0.6.0
 git+https://github.com/adin786/energy_forecast@dev
