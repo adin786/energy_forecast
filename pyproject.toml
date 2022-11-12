@@ -25,5 +25,10 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["black"]
 
-[tool.setuptools]
-packages = ["energy_forecast"]
+# [tool.setuptools]
+# packages = ["energy_forecast"]
+
+[tool.setuptools.packages.find]
+where = ['.']
+include = ['energy_forecast*']
+namespaces = false
