@@ -4,9 +4,11 @@ import plotly.express as px
 import energy_forecast as ef
 from energy_forecast.utils import repo_root
 print(ef.__dict__)
-from energy_forecast.preprocessing import load_and_set_types
-from energy_forecast.deploy.aws_lambda import invoke_lambda_function
-from pathlib import Path
+st.write(ef.__dict__)
+with st.echo():
+    from energy_forecast.preprocessing import load_and_set_types
+    from energy_forecast.deploy.aws_lambda import invoke_lambda_function
+    from pathlib import Path
 
 REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
