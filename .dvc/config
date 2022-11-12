@@ -1,5 +1,5 @@
 [core]
     autostage = true
-    remote = myremote
-['remote "myremote"']
-    url = gdrive://appDataFolder
+    remote = s3_remote
+['remote "s3_remote"']
+    url = s3://energy-forecast/dvc/

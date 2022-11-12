@@ -22,9 +22,14 @@ def get_inference_response(input_date):
 
 def generate_processed_data():
     if not TRAIN_CSV.exists():
-        import subprocess
-        with st.spinner('Rebuilding processed dataset'):
-            subprocess.run(["make", "data"])
+        from dvc.api import DVCFileSystem
+        import time
+        url = "https://github.com/adin786/energy_forecast.git"
+        fs = DVCFileSystem(".")
+        with fs.open("data/processed/train.csv") as f, st.spinner('Syncing datafile using DVC[S3]'):
+            df = pd.read_csv(f, index_col=0)
+            df.to_csv(TRAIN_CSV)
+            time.sleep(3)
 
 st.title("Energy consumption forecasting (UK)")
 

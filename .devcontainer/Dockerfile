@@ -36,8 +36,8 @@ RUN apt-get install build-essential -y &&\
 RUN --mount=type=cache,target=/root/.cache \
     python -m pip install \
     pip==22.2.2 \
-    awscli==1.25.97 \
-    boto3 \
+    awscli>=1.25.97 \
+    boto3>=1.24.59 \
     jupyterlab==3.4.8 \
     ipywidgets==8.0.2.\
     black==22.10.0 \
