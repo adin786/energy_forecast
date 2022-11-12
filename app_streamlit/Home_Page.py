@@ -3,16 +3,13 @@ import pandas as pd
 import plotly.express as px
 import energy_forecast as ef
 from energy_forecast.utils import repo_root
-import pydoc
-st.code(pydoc.render_doc(ef, "Help on %s"))
-st.write(ef.__dict__)
-with st.echo():
-    from energy_forecast.preprocessing import load_and_set_types
-    from energy_forecast.deploy.aws_lambda import invoke_lambda_function
-    from pathlib import Path
+from energy_forecast.preprocessing import load_and_set_types
+from energy_forecast.deploy.aws_lambda import invoke_lambda_function
+from pathlib import Path
 
 REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
+TRAIN_CSV = DATA_DIR / "processed" / "train.csv"
 
 
 @st.cache
@@ -22,6 +19,12 @@ def load_df(path):
 @st.cache
 def get_inference_response(input_date):
     return invoke_lambda_function('energy_forecast', payload={'input_date': str(input_date)})
+
+def generate_processed_data():
+    if not TRAIN_CSV.exists():
+        import subprocess
+        with st.spinner('Rebuilding processed dataset'):
+            subprocess.run(["make", "data"])
 
 st.title("Energy consumption forecasting (UK)")
 
@@ -57,5 +60,7 @@ if btn_state:
 ---
 ## Display some energy usage data
 """
-df = load_df(DATA_DIR / "processed" / "train.csv")
+generate_processed_data()
+
+df = load_df(TRAIN_CSV)
 st.write(df)
