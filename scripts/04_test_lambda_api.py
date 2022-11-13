@@ -1,6 +1,6 @@
 """
-It works!
-Assumes we have AWS CLI configured with credentials already
+Quick test to check that the lambda function works
+Uses boto3 behind the scenes.
 """
 from energy_forecast.deploy.aws_lambda import invoke_lambda_function
 

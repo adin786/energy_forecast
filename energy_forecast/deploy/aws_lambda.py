@@ -1,6 +1,11 @@
 import boto3
+from botocore.errorfactory import ResourceNotFoundException
 import json
 import typing
+
+
+class LambdaOfflineError(Exception):
+    """Raise if lambda function did not exist"""
 
 
 def invoke_lambda_function(
@@ -15,10 +20,15 @@ def invoke_lambda_function(
     payload_str = json.dumps(payload)
     payload_bytes = bytes(payload_str, encoding="utf8")
     client = boto3.client("lambda")
-    response = client.invoke(
-        FunctionName=function_name,
-        InvocationType="RequestResponse",
-        Payload=payload_bytes,
-    )
+    try:
+        response = client.invoke(
+            FunctionName=function_name,
+            InvocationType="RequestResponse",
+            Payload=payload_bytes,
+        )
+    except ResourceNotFoundException:
+        raise LambdaOfflineError('Looks like the lambda function is not deployed yet')
+
+
     response = json.loads(response['Payload'].read())
     return json.loads(response)

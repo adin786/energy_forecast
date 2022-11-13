@@ -24,7 +24,6 @@ def generate_processed_data():
     if not TRAIN_CSV.exists():
         from dvc.api import DVCFileSystem
         import time
-        url = "https://github.com/adin786/energy_forecast.git"
         fs = DVCFileSystem(".")
         with fs.open("data/processed/train.csv") as f, st.spinner('Syncing datafile using DVC[S3]'):
             df = pd.read_csv(f, index_col=0)
