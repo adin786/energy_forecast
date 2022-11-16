@@ -37,7 +37,7 @@ def dedup_dict(params: dict) -> dict:
     new_dict = {}
     for k, v in params.items():
         if k.lower() in seen_keys:
-            new_dict[k+"_"] = v
+            new_dict[k + "_"] = v
         else:
             new_dict[k] = v
         seen_keys.append(k.lower())
@@ -80,7 +80,7 @@ class Model:
         y_test: Optional[pd.DataFrame] = None,
         x_test: Optional[pd.DataFrame] = None,
         exp_name: Optional[str] = None,
-        ) -> None:
+    ) -> None:
         # May need to handle optional x
         # Some models dont use exogenous variables
         logger.remove()
@@ -109,7 +109,7 @@ class Model:
             exp_id = exp.experiment_id
 
         # Fix dtype for Prophet models
-        if self.model.__class__.__name__ == 'Prophet':
+        if self.model.__class__.__name__ == "Prophet":
             y_train = y_train.to_timestamp()
             y_test = y_test.to_timestamp()
 
@@ -118,7 +118,7 @@ class Model:
             mlflow.start_run(experiment_id=exp_id, run_name=self.name) as run,
             open(log_dir / "stdout.log", "w") as f1,
             open(log_dir / "stderr.log", "w") as f2,
-            ):
+        ):
             self.run_name = run
 
             with redirect_stdout(f1), redirect_stderr(f2):
@@ -150,7 +150,7 @@ class Model:
                 mlflow.log_metric("score_mape", score)
 
                 fig = self.plot_evaluation(y_train, y_test)
-                mlflow.log_figure(fig, 'plot.png')
+                mlflow.log_figure(fig, "plot.png")
 
                 # Upload logs
                 mlflow.log_artifact(log_dir / "stdout.log")
@@ -160,7 +160,7 @@ class Model:
         self,
         y_eval: Optional[pd.DataFrame] = None,
         x_eval: Optional[pd.DataFrame] = None,
-        ) -> float:
+    ) -> float:
         # exogenous = False if (x_eval is None) else True
         # if exogenous:
         #     score = self.model.score(y_eval, X=x_eval, fh=y_eval.index)
@@ -170,18 +170,16 @@ class Model:
         logger.info(f"EVAL: {score=:.3f}")
         return score
 
-
     def predict_by_periods(self, periods: Iterable) -> float:
-        """Gives prediction for an list or array of ints, each representing 
+        """Gives prediction for an list or array of ints, each representing
         the number of forward steps to predict at.
         Use `np.arange(x)+1` for a range.  Or [1] for 1 step forward"""
         if not isinstance(periods, Iterable):
-            raise ValueError('Must be an iterable')
+            raise ValueError("Must be an iterable")
         if any([x < 1 for x in periods]):
-            raise ValueError('periods must be >= 1')
+            raise ValueError("periods must be >= 1")
         fh = ForecastingHorizon(periods, is_relative=True)
         return self.model.predict(fh)
-
 
     def predict_by_dates(self, date: Iterable) -> float:
         """Gives prediction at a provided input index.  Must be PeriodIndex etc.
@@ -189,14 +187,9 @@ class Model:
         fh = ForecastingHorizon(date, is_relative=False)
         return self.model.predict(fh)
 
-    
     def plot_evaluation(self, y_train: pd.DataFrame, y_test: pd.DataFrame) -> None:
         y_pred = self.predict_by_dates(y_test.index)
         fig, ax = plot_series(
-            y_train, 
-            y_test, 
-            y_pred, 
-            labels=["train", "test", "predictions"]
+            y_train, y_test, y_pred, labels=["train", "test", "predictions"]
         )
         return fig
-

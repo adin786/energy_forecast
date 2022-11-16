@@ -37,18 +37,18 @@ class DeployedSktimeModel:
         I did it this way to allow alternative serialisation"""
         path = Path(path)
         if not path.is_file() or path.suffix != ".zip":
-            raise ModelDataNotFound("Sktime model data (.zip) was not found")
+            raise ModelDataNotFound(f"Sktime model data (.zip) was not found: {path}, {list(path.parent.glob('*'))}")
         estimator = load(path)
         return cls(estimator)
 
     def predict_by_periods(self, periods: Iterable) -> float:
-        """Gives prediction for an list or array of ints, each representing 
+        """Gives prediction for an list or array of ints, each representing
         the number of forward steps to predict at.
         Try `np.arange(x)+1` for a range.  Or [1] for 1 step forward"""
         if not isinstance(periods, Iterable):
-            raise ValueError('Must be an iterable')
+            raise ValueError("Must be an iterable")
         if any([x < 1 for x in periods]):
-            raise ValueError('periods must be >= 1')
+            raise ValueError("periods must be >= 1")
         fh = ForecastingHorizon(periods, is_relative=True)
         return self.estimator.predict(fh)
 

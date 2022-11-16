@@ -3,7 +3,7 @@ import os
 from typing import Optional
 from loguru import logger
 import sys
-from .model_utils import DeployedSktimeModel
+from model_utils import DeployedSktimeModel
 from pathlib import Path
 import pandas as pd
 
@@ -25,18 +25,16 @@ def lambda_handler(event: dict, context: Optional[dict] = None) -> str:
     """Entrypoint for lambda function
     Acts a distributor for different tasks depending on the
     supplied 'task' field"""
-    context = context if context is not None else {}
     logger.debug(f"ENV: {os.environ}")
     logger.debug(f"EVENT: {event}")
     logger.debug(f"CONTEXT: {type(context)=}")
-    logger.debug(
-        f"CONTEXT: {context.get('function_name')}, {context.get('function_version')}"
-    )
+    if context is not None:
+        logger.debug(f"CONTEXT: {context.function_name}, {context.function_version}")
 
     if not "task" in event:
         logger.debug("Missing 'task' field in event, running dummy task")
         response = dummy(event)
-    else:    
+    else:
         task = event["task"]
         if task == HELLO_WORLD:
             response = hello_world(event)
@@ -70,7 +68,7 @@ def echo(event: dict) -> dict:
 
 def predict_by_periods(event: dict) -> dict:
     """Expects event["data"] = {
-        "model": "naive_seasonal.zip", 
+        "model": "naive_seasonal.zip",
         "periods": [1, 2, 3...]
     }
 
@@ -97,8 +95,7 @@ def predict_by_dates(event: dict) -> dict:
     dates = data["dates"]
     dates = pd.PeriodIndex(dates, freq="M")
 
-    model = DeployedSktimeModel.load(Path.cwd() / "models" / model_name)
-
+    model = DeployedSktimeModel.load(Path(__file__) / "models" / model_name)
 
     y_pred = model.predict_by_dates(dates)
     response = {

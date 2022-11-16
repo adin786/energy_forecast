@@ -9,7 +9,7 @@ import sys
 logger.add(sys.stderr, filter=__name__, level="DEBUG")
 JSON_ORIENT = "index"
 MODEL_LIST = [
-    "naive.zip", 
+    "naive.zip",
     "naive_seasonal.zip",
     "naive_seasonal_drift.zip",
     "autoarima.zip",
@@ -58,29 +58,21 @@ def test_dummy():
     assert "message" in r
     assert r["message"] == "Invalid task"
 
-@pytest.mark.parametrize(
-    "model_name", 
-    MODEL_LIST
-)
+
+@pytest.mark.parametrize("model_name", MODEL_LIST)
 def test_handler_predict_by_periods(model_name):
     event = {
         "task": "predict_by_periods",
-        "data": {
-            "model": model_name,
-            "periods": [1,2,3]
-        }
+        "data": {"model": model_name, "periods": [1, 2, 3]},
     }
     response = lambda_handler(event, {})
     r = json.loads(response)
-    y_pred = pd.read_json(r['predictions'], orient=JSON_ORIENT)
+    y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
     assert isinstance(y_pred.index, pd.DatetimeIndex)
 
 
-@pytest.mark.parametrize(
-    "model_name", 
-    MODEL_LIST
-)
+@pytest.mark.parametrize("model_name", MODEL_LIST)
 def test_handler_predict_by_dates(model_name):
     dates = pd.PeriodIndex(["2017-02", "2017-03", "2017-04"], freq="M")
     dates = dates.astype(str).to_list()
@@ -89,10 +81,10 @@ def test_handler_predict_by_dates(model_name):
         "data": {
             "model": model_name,
             "dates": dates,
-        }
+        },
     }
     response = lambda_handler(event, {})
     r = json.loads(response)
-    y_pred = pd.read_json(r['predictions'], orient=JSON_ORIENT)
+    y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
     assert isinstance(y_pred.index, pd.DatetimeIndex)

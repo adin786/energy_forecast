@@ -39,7 +39,7 @@ ENV PATH=/venv/bin:$PATH
 # Copy the application in.
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR} 
-COPY app_lambda/* ./
+COPY app_lambda/ ./
 
 # Add lambda runtime interface emulator for local testing
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
