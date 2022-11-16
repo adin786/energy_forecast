@@ -9,3 +9,5 @@
 **/*.tfstate*
 logs
 venv
+app_lambda/models
+/models

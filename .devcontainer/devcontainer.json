@@ -61,5 +61,5 @@
 	},
 
 	// Install src package
-	"onCreateCommand": ["pip", "install", "-e", "."]
+	"onCreateCommand": ["pip", "install", "-e", ".[all]"]
 }

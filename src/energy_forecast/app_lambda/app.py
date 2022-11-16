@@ -3,12 +3,12 @@ import os
 from typing import Optional
 from loguru import logger
 import sys
-from model_utils import DeployedSktimeModel
+from .model_utils import DeployedSktimeModel
 from pathlib import Path
 import pandas as pd
 
 logger.remove()
-logger.add(sys.stderr, filter=__name__, level="DEBUG")
+logger.add(sys.stderr, filter=__name__, level="INFO")
 
 HELLO_WORLD = "hello_world"
 ECHO = "echo"
@@ -95,7 +95,7 @@ def predict_by_dates(event: dict) -> dict:
     dates = data["dates"]
     dates = pd.PeriodIndex(dates, freq="M")
 
-    model = DeployedSktimeModel.load(Path(__file__) / "models" / model_name)
+    model = DeployedSktimeModel.load(Path.cwd() / "models" / model_name)
 
     y_pred = model.predict_by_dates(dates)
     response = {

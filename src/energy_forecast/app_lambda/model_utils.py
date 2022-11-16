@@ -7,7 +7,7 @@ from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stderr, filter=__name__, level="DEBUG")
+logger.add(sys.stderr, filter=__name__, level="INFO")
 
 
 class ModelDataNotFound(Exception):
@@ -16,11 +16,10 @@ class ModelDataNotFound(Exception):
 
 def get_estimator(path: str):
     path = Path(path)
-
     if path.is_file():
         estimator = load(path)
     else:
-        raise ModelDataNotFound("Sktime model data (.zip) was not found")
+        raise ModelDataNotFound(f"Sktime model data (.zip) was not found: {path}")
     return estimator
 
 
@@ -35,10 +34,7 @@ class DeployedSktimeModel:
     def load(cls, path: str) -> "DeployedSktimeModel":
         """Construct class from file path using sktime.base.load.
         I did it this way to allow alternative serialisation"""
-        path = Path(path)
-        if not path.is_file() or path.suffix != ".zip":
-            raise ModelDataNotFound(f"Sktime model data (.zip) was not found: {path}, {list(path.parent.glob('*'))}")
-        estimator = load(path)
+        estimator = get_estimator(path)
         return cls(estimator)
 
     def predict_by_periods(self, periods: Iterable) -> float:

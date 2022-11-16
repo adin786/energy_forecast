@@ -16,22 +16,27 @@ authors = [
 ]
 dependencies = [
     "pandas==1.5.0",
-    "matplotlib==3.5.3",
-    "plotly==5.10.0",
+    "sktime==0.14.0",
+    "pmdarima==2.0.1",
     "loguru==0.6.0",
-    "boto3==1.24.59"
 ]
 
 [project.optional-dependencies]
-dev = ["black"]
+dev = ["black", "pytest"]
+all = [
+    "energy_forecast[dev]",
+    "pandas==1.5.0",
+    "matplotlib==3.5.3",
+    "plotly==5.10.0",
+    "loguru==0.6.0",
+    "boto3==1.24.59",
+]
 
-# [tool.setuptools]
-# packages = ["energy_forecast"]
 
 [tool.setuptools.packages.find]
-where = ['.']
+where = ['src']
 include = ['energy_forecast*']
 namespaces = false
 
 [tool.pytest.ini_options]
-testpaths = ["energy_forecast", "app_lambda", "app_streamlit"]
+testpaths = ["src", "tests"]

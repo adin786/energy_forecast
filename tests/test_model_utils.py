@@ -1,19 +1,17 @@
 from pathlib import Path
 import pytest
-from sktime.base import load, BaseEstimator
+from sktime.base import BaseEstimator
 from sktime.forecasting.naive import NaiveForecaster
+from energy_forecast.app_lambda.model_utils import get_estimator
 
 # from ..model_utils import
 
-TEST_MODEL = Path(__file__).parent / "test_model.zip"
+TEST_MODEL = Path.cwd() / "models" / "naive.zip"
 
 
 @pytest.fixture
 def loaded_model() -> BaseEstimator:
-    path = Path(TEST_MODEL)
-    if not path.is_file() or path.suffix != ".zip":
-        raise FileNotFoundError("Sktime model data (.zip) was not found")
-    return load(path)
+    return get_estimator(TEST_MODEL)
 
 
 def test_model_from_path(loaded_model):

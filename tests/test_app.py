@@ -1,6 +1,6 @@
 import pytest
 import json
-from ..app import lambda_handler
+from energy_forecast.app_lambda.app import lambda_handler
 import pandas as pd
 from loguru import logger
 import sys
@@ -24,7 +24,7 @@ def test_handler_hello():
         "task": "hello_world",
         "data": "Some data",
     }
-    response = lambda_handler(event, {})
+    response = lambda_handler(event, None)
     logger.debug(f"{response=}")
     r = json.loads(response)
     logger.debug(f"{r=}")
@@ -40,7 +40,7 @@ def test_handler_echo():
         "task": "echo",
         "data": some_data,
     }
-    response = lambda_handler(event, {})
+    response = lambda_handler(event)
     logger.debug(f"{response=}")
     r = json.loads(response)
     logger.debug(f"{r=}")
@@ -51,7 +51,7 @@ def test_handler_echo():
 
 
 def test_dummy():
-    response = lambda_handler({}, {})
+    response = lambda_handler({})
     r = json.loads(response)
     assert isinstance(response, str)
     assert isinstance(r, dict)
@@ -65,7 +65,7 @@ def test_handler_predict_by_periods(model_name):
         "task": "predict_by_periods",
         "data": {"model": model_name, "periods": [1, 2, 3]},
     }
-    response = lambda_handler(event, {})
+    response = lambda_handler(event)
     r = json.loads(response)
     y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
@@ -83,7 +83,7 @@ def test_handler_predict_by_dates(model_name):
             "dates": dates,
         },
     }
-    response = lambda_handler(event, {})
+    response = lambda_handler(event)
     r = json.loads(response)
     y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
