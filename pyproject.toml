@@ -32,3 +32,6 @@ dev = ["black"]
 where = ['.']
 include = ['energy_forecast*']
 namespaces = false
+
+[tool.pytest.ini_options]
+testpaths = ["energy_forecast", "app_lambda", "app_streamlit"]

@@ -9,8 +9,7 @@ class LambdaOfflineError(Exception):
 
 
 def invoke_lambda_function(
-    function_name: str, 
-    payload: typing.Mapping[str, str] = None
+    function_name: str, payload: typing.Mapping[str, str] = None
 ) -> bytes:
     """Helper function to allow easy invokations of a deployed lambda function
     https://stackoverflow.com/a/59626441/19357935"""
@@ -27,8 +26,7 @@ def invoke_lambda_function(
             Payload=payload_bytes,
         )
     except ResourceNotFoundException:
-        raise LambdaOfflineError('Looks like the lambda function is not deployed yet')
+        raise LambdaOfflineError("Looks like the lambda function is not deployed yet")
 
-
-    response = json.loads(response['Payload'].read())
+    response = json.loads(response["Payload"].read())
     return json.loads(response)
