@@ -34,9 +34,9 @@ jobs:
       id: plan
       run: terraform plan -no-color
       
-    - run: echo ${{ steps.plan.outputs.stdout }} | tail -c 60000
-    - run: echo ${{ steps.plan.outputs.stderr }} | tail -c 60000
-    - run: echo ${{ steps.plan.outputs.exitcode }} | tail -c 60000
+    - run: echo "${{ steps.plan.outputs.stdout }}" | tail -c 60000
+    - run: echo "${{ steps.plan.outputs.stderr }}" | tail -c 60000
+    - run: echo "${{ steps.plan.outputs.exitcode }}" | tail -c 60000
       
     - name: Terraform Apply
       id: apply
