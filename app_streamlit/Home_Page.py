@@ -6,10 +6,26 @@ from energy_forecast.utils import repo_root
 from energy_forecast.preprocessing import load_and_set_types
 from energy_forecast.deploy.aws_lambda import invoke_lambda_function
 from pathlib import Path
+import json
+from datetime import date
+import plotly.express as px
+import plotly.graph_objects as go
+from dvc.api import DVCFileSystem
+import time
+
 
 REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
 TRAIN_CSV = DATA_DIR / "processed" / "train.csv"
+TEST_CSV = DATA_DIR / "processed" / "test.csv"
+MODELS = {
+    "Naive": "naive.zip",
+    "Naive seasonal": "naive_seasonal.zip",
+    "Naive seasonal with drift": "naive_seasonal_drift.zip",
+    "AutoARIMA": "autoarima.zip",
+    "SARIMAX": "sarimax.zip",
+    "Exponential smoothing": "exp_smoothing.zip",
+}
 
 
 @st.cache
@@ -17,11 +33,38 @@ def load_df(path):
     return load_and_set_types(path)
 
 
+def date_range_to_list(end_date, start_date="2017-02"):
+    datetimes = pd.date_range("2017-02", selected_date, freq="M")
+    return pd.PeriodIndex(datetimes).to_series().astype(str).to_list()
+
+
 @st.cache
-def get_inference_response(input_date):
-    return invoke_lambda_function(
-        "energy_forecast", payload={"input_date": str(input_date)}
+def get_predict_by_dates(dates, model_name):
+    event = {
+        "task": "predict_by_dates",
+        "data": {
+            "model": model_name,
+            "dates": dates,
+        },
+    }
+    response = invoke_lambda_function(
+        "energy_forecast", 
+        payload=event,
     )
+    return response
+
+@st.cache
+def gather_data_files():
+    fs = DVCFileSystem(".")
+    with st.spinner("Syncing datafile using DVC[S3]"):
+        relative_train = TRAIN_CSV.relative_to(Path.cwd())
+        with fs.open(relative_train) as f:
+            train = pd.read_csv(f, index_col=0)
+        relative_test = TEST_CSV.relative_to(Path.cwd())
+        with fs.open(relative_test) as f:
+            test = pd.read_csv(f, index_col=0)
+    time.sleep(2)
+    return train, test
 
 
 def generate_processed_data():
@@ -39,9 +82,9 @@ def generate_processed_data():
             time.sleep(3)
 
 
-st.title("Energy consumption forecasting (UK)")
 
 """
+# Energy consumption forecasting (UK)
 This app computes timeseries forecasts for
 UK monthly energy consumption.
 
@@ -49,31 +92,81 @@ Use the sidebar to switch between this
 interactive forecaster tool, a visual analysis of 
 energy trends data, and discussion of forecasting model 
 results.
+
+## Timeseries plot of energy consumption in UK
 """
 
-"""
-## Request a model prediction from the inference API
+# Gather files
+train, test = gather_data_files()
 
-The model is deployed as a serverless lambda function and we can query it 
-for a result using `boto3` pre-configured with AWS credentials
+# Plot
+"May remove this plot later"
+plot_container = st.empty()
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
+fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
+plot_container.plotly_chart(fig)
+
+
+
+"""
+## Generate a forecast
+Select a model to run, and the end-date for the forecast.
+All dates are rounded to their nearest month
 """
 
-selected_date = st.date_input("Select a target date for the forecast")
+col1, col2 = st.columns(2)
+with col1:
+    selected_model = st.selectbox("Select a forecasting model to run", MODELS.keys())
+
+with col2:
+    selected_date = st.date_input("Select a target date for the forecast", value=date(2022, 1, 1), max_value=date(2030, 1, 1))
 
 btn_state = st.button("Process")
 
+selected_model_name = MODELS[selected_model]
+st.write(f"You have selected: {selected_model_name}")
+dates = date_range_to_list(selected_date)
+st.write(f"You have selected between: {dates[0]} and {dates[-1]}")
+
+# Plot
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
+fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
+plot_container.plotly_chart(fig)
+
 if btn_state:
-    response = get_inference_response(selected_date)
-    st.write('The inference "server" responded with:')
-    st.write(response)
-    st.write("Try picking a different date further in the future and re-process")
+    response = get_predict_by_dates(dates, selected_model_name)
+    st.write('Lambda fn response:')
+
+    if not "predictions" in response:
+        st.error("The response did not contain the \"predictions\" or \"orient\" keys")
+    else:
+        predictions = json.loads(response["predictions"])
+        preds = pd.DataFrame.from_dict(predictions, orient=response["orient"])
+        preds = preds.assign(date=preds.index)
+
+        # Plot
+        plot_container2 = st.empty()
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
+        fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
+        fig.add_trace(go.Scatter(x=preds.index, y=preds["total_energy"], name="Pred"))
+        plot_container2.plotly_chart(fig)
+
+
+
 
 
 """
 ---
 ## Display some energy usage data
 """
-generate_processed_data()
+# generate_processed_data()
 
-df = load_df(TRAIN_CSV)
-st.write(df)
+# df = load_df(TRAIN_CSV)
+"### Train"
+st.write(train)
+
+"### Test"
+st.write(test)
