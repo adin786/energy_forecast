@@ -7,7 +7,7 @@ from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stderr, filter=__name__, level="INFO")
+logger.add(sys.stderr, filter=__name__, level="DEBUG")
 
 
 class ModelDataNotFound(Exception):

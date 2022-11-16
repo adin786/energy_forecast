@@ -20,6 +20,17 @@ def load_and_set_types(path: str) -> pd.DataFrame:
     return df
 
 
+def load_and_set_types_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Load csv and set types"""
+    logger.debug("Loading csv and setting types")
+    df = (
+        df
+        .assign(datetime=lambda x: pd.to_datetime(x["datetime"], format="%Y-%m-%d"))
+        .set_index("datetime", drop=True)
+    )
+    return df
+
+
 def crop(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     """Trim the data between two dates"""
     logger.debug(f"Trimming between {start} and {end}")

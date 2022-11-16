@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 logger.remove()
-logger.add(sys.stderr, filter=__name__, level="INFO")
+logger.add(sys.stderr, filter=__name__, level="DEBUG")
 
 HELLO_WORLD = "hello_world"
 ECHO = "echo"
