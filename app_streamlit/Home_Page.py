@@ -21,7 +21,7 @@ TEST_CSV = DATA_DIR / "processed" / "test.csv"
 MODELS = {
     "Naive": "naive.zip",
     "Naive seasonal": "naive_seasonal.zip",
-    "Naive seasonal with drift": "naive_seasonal_drift.zip",
+    "Naive with drift": "naive_seasonal_drift.zip",
     "AutoARIMA": "autoarima.zip",
     "SARIMAX": "sarimax.zip",
     "Exponential smoothing": "exp_smoothing.zip",
@@ -38,7 +38,7 @@ def date_range_to_list(end_date, start_date="2017-02"):
     return pd.PeriodIndex(datetimes).to_series().astype(str).to_list()
 
 
-@st.cache
+# @st.cache
 def get_predict_by_dates(dates, model_name):
     event = {
         "task": "predict_by_dates",
@@ -48,10 +48,11 @@ def get_predict_by_dates(dates, model_name):
         },
     }
     response = invoke_lambda_function(
-        "energy_forecast", 
+        "energy_forecast",
         payload=event,
     )
     return response
+
 
 @st.cache
 def gather_data_files():
@@ -82,7 +83,6 @@ def generate_processed_data():
             time.sleep(3)
 
 
-
 """
 # Energy consumption forecasting (UK)
 This app computes timeseries forecasts for
@@ -92,21 +92,18 @@ Use the sidebar to switch between this
 interactive forecaster tool, a visual analysis of 
 energy trends data, and discussion of forecasting model 
 results.
-
-## Timeseries plot of energy consumption in UK
 """
 
 # Gather files
 train, test = gather_data_files()
 
 # Plot
-"May remove this plot later"
-plot_container = st.empty()
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
-fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
-plot_container.plotly_chart(fig)
-
+# "May remove this plot later"
+# plot_container = st.empty()
+# fig = go.Figure()
+# fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
+# fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
+# plot_container.plotly_chart(fig)
 
 
 """
@@ -120,53 +117,81 @@ with col1:
     selected_model = st.selectbox("Select a forecasting model to run", MODELS.keys())
 
 with col2:
-    selected_date = st.date_input("Select a target date for the forecast", value=date(2022, 1, 1), max_value=date(2030, 1, 1))
+    selected_date = st.date_input(
+        "Select a target date for the forecast",
+        value=date(2022, 6, 30),
+        max_value=date(2030, 1, 1),
+    )
 
 btn_state = st.button("Process")
 
 selected_model_name = MODELS[selected_model]
-st.write(f"You have selected: {selected_model_name}")
 dates = date_range_to_list(selected_date)
-st.write(f"You have selected between: {dates[0]} and {dates[-1]}")
+st.write(f"Forecast will be computed between: {dates[0]} and {dates[-1]}")
 
 # Plot
+plot_container2 = st.empty()
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
-fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
-plot_container.plotly_chart(fig)
+fig.add_trace(
+    go.Scatter(
+        x=train.index,
+        y=train["total_energy"],
+        name="Train",
+        line=dict(color="royalblue"),
+    )
+)
+fig.add_trace(
+    go.Scatter(
+        x=test.index, y=test["total_energy"], name="Test", line=dict(color="indianred")
+    )
+)
+fig.update_layout(
+    title="Total UK Energy consumption",
+    xaxis_title="Date",
+    yaxis_title="Mtoe (Million Tons Oil equiv.)",
+)
+plot_container2.plotly_chart(fig)
+
 
 if btn_state:
     response = get_predict_by_dates(dates, selected_model_name)
-    st.write('Lambda fn response:')
 
     if not "predictions" in response:
-        st.error("The response did not contain the \"predictions\" or \"orient\" keys")
+        st.error(
+            'The response did not contain the "predictions" or "orient" keys.\n'
+            "Try processing again."
+        )
+        print(response)
     else:
         predictions = json.loads(response["predictions"])
         preds = pd.DataFrame.from_dict(predictions, orient=response["orient"])
         preds = preds.assign(date=preds.index)
 
-        # Plot
-        plot_container2 = st.empty()
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=train.index, y=train["total_energy"], name="Train"))
-        fig.add_trace(go.Scatter(x=test.index, y=test["total_energy"], name="Test"))
-        fig.add_trace(go.Scatter(x=preds.index, y=preds["total_energy"], name="Pred"))
+        fig.add_trace(
+            go.Scatter(
+                x=preds.index,
+                y=preds["total_energy"],
+                name="Forecast",
+                line=dict(color="royalblue", dash="dot"),
+            )
+        )
+        fig.update_layout(
+            title="Total UK Energy consumption - with forecast",
+            xaxis_title="Date",
+            yaxis_title="Mtoe (Million Tons Oil equiv.)",
+        )
         plot_container2.plotly_chart(fig)
 
 
+# """
+# ---
+# ## Display some energy usage data
+# """
+# # generate_processed_data()
 
+# # df = load_df(TRAIN_CSV)
+# "### Train"
+# st.write(train)
 
-
-"""
----
-## Display some energy usage data
-"""
-# generate_processed_data()
-
-# df = load_df(TRAIN_CSV)
-"### Train"
-st.write(train)
-
-"### Test"
-st.write(test)
+# "### Test"
+# st.write(test)

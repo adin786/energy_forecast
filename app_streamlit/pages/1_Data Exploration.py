@@ -29,9 +29,8 @@ def generate_processed_data():
             time.sleep(3)
 
 
-st.title("EDA")
 """
-Exploratory data analysis
+# Data Exploration
 """
 
 ## Display some energy usage data

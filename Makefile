@@ -47,7 +47,7 @@ processed_data: $(PROCESSED)
 data: $(PROCESSED)
 
 style:
-	black ./energy_forecast \
+	black ./src \
 		./app_lambda \
 		./app_streamlit \
 		./scripts

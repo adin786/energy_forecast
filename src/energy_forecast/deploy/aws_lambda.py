@@ -26,7 +26,7 @@ def invoke_lambda_function(
         )
     except client.exceptions.ResourceNotFoundException:
         raise LambdaOfflineError("Looks like the lambda function is not deployed yet")
-    response_str = response["Payload"].read().decode('utf-8') 
+    response_str = response["Payload"].read().decode("utf-8")
     # print(response_str)
     response_dict = json.loads(response_str)
     # print(response_dict)
