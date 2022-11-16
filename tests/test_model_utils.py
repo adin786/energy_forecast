@@ -4,8 +4,6 @@ from sktime.base import BaseEstimator
 from sktime.forecasting.naive import NaiveForecaster
 from energy_forecast.app_lambda.model_utils import get_estimator
 
-# from ..model_utils import
-
 TEST_MODEL = Path.cwd() / "models" / "naive.zip"
 
 

@@ -24,13 +24,8 @@ def test_handler_hello():
         "task": "hello_world",
         "data": "Some data",
     }
-    response = lambda_handler(event, None)
-    logger.debug(f"{response=}")
-    r = json.loads(response)
-    logger.debug(f"{r=}")
-    assert isinstance(response, str)
+    r = lambda_handler(event, None)
     assert isinstance(r, dict)
-    assert "message" in r
     assert r["message"] == "Hello world, this is a test function!"
 
 
@@ -40,22 +35,14 @@ def test_handler_echo():
         "task": "echo",
         "data": some_data,
     }
-    response = lambda_handler(event)
-    logger.debug(f"{response=}")
-    r = json.loads(response)
-    logger.debug(f"{r=}")
-    assert isinstance(response, str)
+    r = lambda_handler(event)
     assert isinstance(r, dict)
-    assert "message" in r
     assert r["message"] == some_data
 
 
 def test_dummy():
-    response = lambda_handler({})
-    r = json.loads(response)
-    assert isinstance(response, str)
+    r = lambda_handler({})
     assert isinstance(r, dict)
-    assert "message" in r
     assert r["message"] == "Invalid task"
 
 
@@ -65,8 +52,8 @@ def test_handler_predict_by_periods(model_name):
         "task": "predict_by_periods",
         "data": {"model": model_name, "periods": [1, 2, 3]},
     }
-    response = lambda_handler(event)
-    r = json.loads(response)
+    r = lambda_handler(event)
+    assert isinstance(r, dict)
     y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
     assert isinstance(y_pred.index, pd.DatetimeIndex)
@@ -83,8 +70,8 @@ def test_handler_predict_by_dates(model_name):
             "dates": dates,
         },
     }
-    response = lambda_handler(event)
-    r = json.loads(response)
+    r = lambda_handler(event)
+    assert isinstance(r, dict)
     y_pred = pd.read_json(r["predictions"], orient=JSON_ORIENT)
     assert y_pred.shape == (3, 1)
     assert isinstance(y_pred.index, pd.DatetimeIndex)

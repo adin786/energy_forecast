@@ -22,9 +22,9 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: DVC pull model files
+      uses: iterative/setup-dvc@v1
       run: |
-        python3 -m pip install dvc[s3]==2.33.0
-        python3 -m dvc pull app_lambda/models/ 
+        dvc pull models.dvc 
 
     - name: Login to Amazon ECR
       id: login-ecr

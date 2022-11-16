@@ -47,7 +47,18 @@ def lambda_handler(event: dict, context: Optional[dict] = None) -> str:
         else:
             response = dummy(event)
 
-    return json.dumps(response)
+    if not is_jsonable(response):
+        raise TypeError(f"response object was not JSON serialisable: {response}")
+    return response
+
+
+def is_jsonable(x):
+    """https://stackoverflow.com/a/53112659/19357935"""
+    try:
+        json.dumps(x)
+        return True
+    except (TypeError, OverflowError):
+        return False
 
 
 def dummy(event: dict) -> dict:
