@@ -1,7 +1,7 @@
 """Placeholder"""
 from pathlib import Path
 import pandas as pd
-from ..loaders import load_ods, load_ods_sheetnames
+from energy_forecast.loaders import load_ods, load_ods_sheetnames
 import pytest
 
 TEST_FILE = Path(__file__).parent / "test_ods.ods"

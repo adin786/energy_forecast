@@ -1,5 +1,5 @@
 from pathlib import Path
-from ..utils import repo_root
+from energy_forecast.utils import repo_root
 
 
 def test_repo_root():
