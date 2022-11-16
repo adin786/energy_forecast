@@ -21,8 +21,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    - name: DVC pull model files
+    - name: Set up DVC
       uses: iterative/setup-dvc@v1
+
+    - name: DVC pull model files
       run: |
         dvc pull models.dvc 
 
