@@ -18,3 +18,5 @@ mlflow==2.0.1
 openpyxl==3.0.10
 odfpy==1.4.1
 loguru==0.6.0
+pre-commit==2.20.0
+pylint==2.15.6

@@ -1,16 +1,17 @@
 # Energy_forecast 
   
-In this project I demonstrate a simple architecture for serverless ML model deployment, building in MLOps principles such as experiment tracking, data versioning and model monitoring.
+In this project I demonstrate a simple architecture for serverless ML model deployment, building in MLOps principles such as experiment tracking, data versioning, CI/CD and monitoring.
 
-This project uses only free-tier cloud services, and is geared towards DIY, personal ML projects.
+**Purpose:** To show how MLOps principles can be used even in small scale, simple ML projects using only open source tools and free-tier cloud services.
 
+The focus is on **minimal the time/effort to go from experimentation to a deployed model**... not specifically on sophisticated timeseries forecasting techniques.
 
 ## Technical overview
 
-- **Jupyter** for exploration and model building
-- Custom **Python package** for bundling up into a reusable pipeline.
-- **Sktime** as framework for forecaster model development 
-- **DVC** for dataset versioning, synced to S3
+- **Jupyter** for data exploration and experimentation 
+- Custom **Python package** for refactoring code into a reusable pipeline.
+- **Sktime** as ML framework for timeseries
+- **DVC** for data versioning, synced to **AWS S3**
 - **Mlflow** for experiment tracking
 - Serverless model inference on **AWS Lambda**
 - **Streamlit** web-app for interactive demo
@@ -18,10 +19,13 @@ This project uses only free-tier cloud services, and is geared towards DIY, pers
   - **Pytest** suite of unit tests
   - **Docker** image build & push to **ECR**
   - **Terraform** to manage infra-as-code
-- Monitoring with **Cloudwatch**.
+- Monitoring with **AWS Cloudwatch**.
 
-![Insert architecture diagram]()
+## Architecture diagram
 
+![Placeholder for architecture diagram]()
+
+--- 
 
 ## Data source 
    The datasets were downloaded from data.gov.uk and are openly available.
@@ -51,9 +55,8 @@ You may therefore need to update the data cleaning/transformation scripts.
 
 ## Forecasting 
 
-- Variety of forecaster models trained 
-- Mlflow used for experiment tracking 
-- ... 
+- Selected forecaster model was AutoARIMA
+
 
 ## Deployment 
   - Deploy model inference api as a **serverless lambda function**
