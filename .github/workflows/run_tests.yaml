@@ -39,9 +39,7 @@ jobs:
         pip install .[dev]
 
     - name: Run pre-commit hooks
-      run: |
-        pre-commit install
-        pre-commit run --all-files
+      uses: pre-commit/action@v3.0.0
 
     - name: Run tests
       run: |
