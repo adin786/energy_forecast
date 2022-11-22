@@ -1,9 +1,12 @@
 # https://towardsaws.com/build-push-docker-image-to-aws-ecr-using-github-actions-8396888a8f9e
 
-name: Build image for Lambda function
+name: Build image
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   tf_fmt:
