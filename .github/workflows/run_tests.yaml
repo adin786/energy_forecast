@@ -1,0 +1,44 @@
+name: Run tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v4 
+      with:
+        python-version: '3.9.13' 
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Set up DVC
+      uses: iterative/setup-dvc@v1
+
+    - name: DVC pull files
+      run: |
+        dvc pull
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install .
+
+    - name: Run pre-commit hooks
+      run: |
+        pre-commit install
+        pre-commit run --all-files
