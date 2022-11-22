@@ -66,6 +66,7 @@ resource "aws_lambda_function" "energy_forecast_lambda" {
   image_uri        = "081150070467.dkr.ecr.eu-west-2.amazonaws.com/energy_forecast/lambda:latest"
   function_name    = "energy_forecast"
   role             = aws_iam_role.iam_for_lambda.arn
+  timeout          = 30
 }
 
 resource "aws_lambda_function_url" "lambda_function_url" {
@@ -121,32 +122,3 @@ resource "aws_iam_role_policy_attachment" "logging_policy_attachment" {
 }
 
 
-
-# DOCKER CONTAINERS
-
-# provider "docker" {}
-
-# resource "docker_image" "lambda" {
-#   name = "lambda"
-#   build {
-#     path = "."
-#     tag  = ["lambda:latest"]
-#     dockerfile = "Dockerfile.lambda"
-#     label = {
-#       author : "Azam Din"
-#     }
-#   }
-#   triggers = {
-#     dir_sha1 = sha1(join("", [for f in fileset(path.module, "lambda_app/*") : filesha1(f)]))
-#     file_sha2 = filesha256("Dockerfile.lambda")
-#   }
-# }
-
-# resource "docker_container" "lambda_container" {
-#   image = docker_image.lambda.name
-#   name  = "lambda_container"
-#   ports {
-#     internal = 8080
-#     external = 8000
-#   }
-# }

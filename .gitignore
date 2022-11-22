@@ -5,5 +5,10 @@
 **/*.zip
 **/mlruns
 **/*.log
-.terraform*
+terraform.tfstate*
+.terraform
 **/*.tfstate*
+logs
+venv
+app_lambda/models
+/models

@@ -24,10 +24,14 @@ ENV PATH=/venv/bin:$PATH
 # Install Python dependencies to virtual environment
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
-RUN pip install awslambdaric
-COPY app_lambda/requirements.txt ./
-RUN pip install -r requirements.txt
 
+# Pip install things
+RUN pip install awslambdaric
+COPY src/ ./src
+COPY pyproject.toml ./
+RUN pip install .
+
+# ======================
 
 # Final stage:
 FROM python:3.9.13-slim-buster
@@ -39,14 +43,15 @@ ENV PATH=/venv/bin:$PATH
 # Copy the application in.
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR} 
-COPY app_lambda/* ./
+COPY app_lambda/ ./
+COPY models/ ./models/
 
 # Add lambda runtime interface emulator for local testing
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 COPY app_lambda/entry.sh /
 RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
 ENTRYPOINT [ "/entry.sh" ]
-CMD [ "app.lambda_handler" ]
+CMD [ "energy_forecast.app_lambda.app.lambda_handler" ]
 
 # test the image
 # docker run -p 9000:8080 lambda/python:3.9-alpine3.12
