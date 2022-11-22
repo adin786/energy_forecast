@@ -1,7 +1,10 @@
 # Energy_forecast 
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)  [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)  [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)  [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)  
+![build_image](https://github.com/github/docs/actions/workflows/build_image.yaml/badge.svg)  ![deploy_infra](https://github.com/github/docs/actions/workflows/deploy_infra.yaml/badge.svg)  
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=549097765)
+
+## Summary
   
 In this project I demonstrate a simple architecture for serverless ML model deployment, building in MLOps principles such as experiment tracking, data versioning, CI/CD and monitoring.
 
@@ -9,7 +12,7 @@ In this project I demonstrate a simple architecture for serverless ML model depl
 
 The focus is on **minimal the time/effort to go from experimentation to a deployed model**... not specifically on sophisticated timeseries forecasting techniques.
 
-## Technical overview
+## Technical highlights
 
 - **Jupyter** for data exploration and experimentation 
 - Custom **Python package** for refactoring code into a reusable pipeline.
