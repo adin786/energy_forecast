@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from energy_forecast.utils import repo_root
 
 

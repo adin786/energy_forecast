@@ -1,7 +1,9 @@
 from pathlib import Path
+
 import pytest
 from sktime.base import BaseEstimator
 from sktime.forecasting.naive import NaiveForecaster
+
 from energy_forecast.app_lambda.model_utils import get_estimator
 
 TEST_MODEL = Path.cwd() / "models" / "naive.zip"

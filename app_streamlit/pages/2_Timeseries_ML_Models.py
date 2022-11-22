@@ -3,9 +3,11 @@ import streamlit as st
 """
 # Timeseries Forecasting Models
 """
-import streamlit as st
-from energy_forecast.utils import repo_root
 from pathlib import Path
+
+import streamlit as st
+
+from energy_forecast.utils import repo_root
 
 REPO_ROOT = Path(repo_root())
 PLOTS = REPO_ROOT / "assets" / "plots"

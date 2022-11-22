@@ -1,6 +1,7 @@
+import sys
+
 import pandas as pd
 from loguru import logger
-import sys
 
 logger.remove()
 logger.add(sys.stderr, filter=__name__, level="INFO")
@@ -32,7 +33,7 @@ def load_and_set_types_df(df: pd.DataFrame) -> pd.DataFrame:
 def crop(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     """Trim the data between two dates"""
     logger.debug(f"Trimming between {start} and {end}")
-    df = df.loc[start:end]
+    df = df.loc[start:end]  # type: ignore
     return df
 
 

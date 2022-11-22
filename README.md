@@ -42,7 +42,8 @@ You may therefore need to update the data cleaning/transformation scripts.
 
 
 ## Data Engineering / Cleaning 
- - Data files parsed, transformed into monthly timeseries dataframe. 
+
+- Data files parsed, transformed into monthly timeseries dataframe. 
 - Temporal train-test split (80:20) applied.  - Target variable (for forecasting) set as "Total Energy" consumption. 
 - Saved as .csv 
 - DVC used for data version control, remote stored in GDrive 
@@ -65,11 +66,23 @@ You may therefore need to update the data cleaning/transformation scripts.
 - Using **Terraform** to deploy all cloud resources.  Enables easy `terraform destroy` to teardownall cloud resources if it starts to cost money.
 
   
-## Requirements / Reproducibility 
+## Requirements / Reproducibility
   
-All developement done inside a vscode devcontainer. For configuration, see `.devcontainer/Dockerfile`.
-Clone and open this repo folder with VSCode to build and attach to the dev environment.
+All developement is done inside a Docker devcontainer, and should work inside a Github Codespace.  Requires the following Github secrets to be configured:
+- AWS_ACCESS_KEY_ID
+- 
+
 All code developed for `Python 3.9.13`.
+
+See `requirements.txt` for package dependencies
+
+The following commnds may be required to configure/init your local copy of this repo
+
+```bash
+pre-commit install  # Configures git-hooks for code linting etc
+terraform init  # Requires AWS credentials to be configured.
+```
+
 
 
 ## Helpful commands
@@ -90,6 +103,7 @@ See `Makefile` for some useful commands like:
 - Introduce API gateway to expose forecaster as an open REST API.
 
 
-## Other
+## Badges
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)  
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)

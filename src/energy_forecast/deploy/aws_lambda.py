@@ -1,6 +1,7 @@
-import boto3
 import json
 import typing
+
+import boto3
 
 
 class LambdaOfflineError(Exception):
@@ -24,8 +25,10 @@ def invoke_lambda_function(
             InvocationType="RequestResponse",
             Payload=payload_bytes,
         )
-    except client.exceptions.ResourceNotFoundException:
-        raise LambdaOfflineError("Looks like the lambda function is not deployed yet")
+    except client.exceptions.ResourceNotFoundException as exc:
+        raise LambdaOfflineError(
+            "Looks like the lambda function is not deployed yet"
+        ) from exc
     response_str = response["Payload"].read().decode("utf-8")
     # print(response_str)
     response_dict = json.loads(response_str)

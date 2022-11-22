@@ -1,11 +1,13 @@
-from energy_forecast.utils import repo_root
-from energy_forecast.preprocessing import load_and_set_types, crop
-from sktime.forecasting.model_selection import temporal_train_test_split
+import sys
 from pathlib import Path
+
 import click
 import pandas as pd
 from loguru import logger
-import sys
+from sktime.forecasting.model_selection import temporal_train_test_split
+
+from energy_forecast.preprocessing import crop, load_and_set_types
+from energy_forecast.utils import repo_root
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")

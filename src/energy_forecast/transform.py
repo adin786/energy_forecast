@@ -1,11 +1,13 @@
-from .loaders import load_ods, load_ods_sheetnames
-import pandas as pd
-from pandas import DataFrame
-import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
-from loguru import logger
 import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from loguru import logger
+from pandas import DataFrame
+
+from .loaders import load_ods, load_ods_sheetnames
 
 logger.remove()
 logger.add(sys.stderr, filter=__name__, level="INFO")

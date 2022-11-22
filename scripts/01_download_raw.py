@@ -1,9 +1,11 @@
-from energy_forecast.download import download_file
-from energy_forecast.utils import repo_root
+import sys
 from pathlib import Path
+
 import click
 from loguru import logger
-import sys
+
+from energy_forecast.download import download_file
+from energy_forecast.utils import repo_root
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")

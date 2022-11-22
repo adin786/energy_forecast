@@ -1,8 +1,10 @@
-import requests
-from pathlib import Path
-from .utils import repo_root
-from loguru import logger
 import sys
+from pathlib import Path
+
+import requests
+from loguru import logger
+
+from .utils import repo_root
 
 logger.remove()
 logger.add(sys.stderr, filter=__name__, level="INFO")

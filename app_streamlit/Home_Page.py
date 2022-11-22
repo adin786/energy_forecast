@@ -1,18 +1,18 @@
-import streamlit as st
+import json
+import time
+from datetime import date
+from pathlib import Path
+
 import pandas as pd
 import plotly.express as px
-import energy_forecast as ef
-from energy_forecast.utils import repo_root
-from energy_forecast.preprocessing import load_and_set_types
-from energy_forecast.deploy.aws_lambda import invoke_lambda_function
-from pathlib import Path
-import json
-from datetime import date
-import plotly.express as px
 import plotly.graph_objects as go
+import streamlit as st
 from dvc.api import DVCFileSystem
-import time
 
+import energy_forecast as ef
+from energy_forecast.deploy.aws_lambda import invoke_lambda_function
+from energy_forecast.preprocessing import load_and_set_types
+from energy_forecast.utils import repo_root
 
 REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
@@ -70,8 +70,9 @@ def gather_data_files():
 
 def generate_processed_data():
     if not TRAIN_CSV.exists():
-        from dvc.api import DVCFileSystem
         import time
+
+        from dvc.api import DVCFileSystem
 
         fs = DVCFileSystem(".")
         with fs.open("data/processed/train.csv") as f, st.spinner(

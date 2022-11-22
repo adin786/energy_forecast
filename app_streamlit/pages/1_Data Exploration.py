@@ -1,8 +1,10 @@
-import streamlit as st
-import pandas as pd
-from energy_forecast.utils import repo_root
-from energy_forecast.preprocessing import load_and_set_types
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+
+from energy_forecast.preprocessing import load_and_set_types
+from energy_forecast.utils import repo_root
 
 REPO_ROOT = Path(repo_root())
 DATA_DIR = REPO_ROOT / "data"
@@ -16,8 +18,9 @@ def load_df(path):
 
 def generate_processed_data():
     if not TRAIN_CSV.exists():
-        from dvc.api import DVCFileSystem
         import time
+
+        from dvc.api import DVCFileSystem
 
         fs = DVCFileSystem(".")
         with fs.open("data/processed/train.csv") as f, st.spinner(

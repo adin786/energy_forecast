@@ -1,6 +1,7 @@
-import pandas as pd
 import warnings
 from pathlib import Path
+
+import pandas as pd
 
 
 def load_ods(path: str, sheet_name: str) -> pd.DataFrame:

@@ -1,19 +1,19 @@
-from sktime.forecasting.base import ForecastingHorizon
-from sktime import base
-from sktime.utils.plotting import plot_series
-import pandas as pd
-import numpy as np
-from typing import Iterable, Optional
-from time import perf_counter
-from loguru import logger
-import sys
-import mlflow
-import matplotlib.pyplot as plt
-from contextlib import redirect_stdout, redirect_stderr
-from pathlib import Path
-from .utils import repo_root
 import shutil
+import sys
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+from time import perf_counter
+from typing import Iterable, Optional
 
+import matplotlib.pyplot as plt
+import mlflow
+import pandas as pd
+from loguru import logger
+from sktime import base
+from sktime.forecasting.base import ForecastingHorizon
+from sktime.utils.plotting import plot_series
+
+from .utils import repo_root
 
 LEVEL = "WARNING"
 logger.remove()
@@ -187,9 +187,11 @@ class Model:
         fh = ForecastingHorizon(date, is_relative=False)
         return self.model.predict(fh)
 
-    def plot_evaluation(self, y_train: pd.DataFrame, y_test: pd.DataFrame) -> None:
+    def plot_evaluation(
+        self, y_train: pd.DataFrame, y_test: pd.DataFrame
+    ) -> plt.Figure:
         y_pred = self.predict_by_dates(y_test.index)
-        fig, ax = plot_series(
+        fig, _ = plot_series(
             y_train, y_test, y_pred, labels=["train", "test", "predictions"]
         )
         return fig

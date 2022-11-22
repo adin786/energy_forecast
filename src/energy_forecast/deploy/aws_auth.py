@@ -10,12 +10,14 @@ The below is my modified version of the script example provided by Amazon.
 # This version makes a GET request and passes the signature
 # in the Authorization header.
 """
-import sys
-import os
 import base64
 import datetime
 import hashlib
 import hmac
+import os
+import sys
+from typing import Any, Dict, Tuple
+
 import requests  # pip install requests
 
 
@@ -26,7 +28,7 @@ def sigv4_auth_header(
     region="us-east-1",
     endpoint="https://ec2.amazonaws.com",
     request_parameters="Action=DescribeRegions&Version=2013-10-15",
-) -> str:
+) -> Tuple[str, Dict[str, Any]]:
     """Generate a request auth header for AWS lambda functions
     Requires AWS auth+secret keys to be set as environment variables"""
 

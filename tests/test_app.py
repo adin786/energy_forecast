@@ -1,9 +1,11 @@
-import pytest
 import json
-from energy_forecast.app_lambda.app import lambda_handler
-import pandas as pd
-from loguru import logger
 import sys
+
+import pandas as pd
+import pytest
+from loguru import logger
+
+from energy_forecast.app_lambda.app import lambda_handler
 
 # logger.remove()
 logger.add(sys.stderr, filter=__name__, level="DEBUG")
@@ -48,6 +50,7 @@ def test_dummy():
 
 @pytest.mark.parametrize("model_name", MODEL_LIST)
 def test_handler_predict_by_periods(model_name):
+    # pylint: disable=no-member
     event = {
         "task": "predict_by_periods",
         "data": {"model": model_name, "periods": [1, 2, 3]},
@@ -61,6 +64,7 @@ def test_handler_predict_by_periods(model_name):
 
 @pytest.mark.parametrize("model_name", MODEL_LIST)
 def test_handler_predict_by_dates(model_name):
+    # pylint: disable=no-member
     dates = pd.PeriodIndex(["2017-02", "2017-03", "2017-04"], freq="M")
     dates = dates.astype(str).to_list()
     event = {

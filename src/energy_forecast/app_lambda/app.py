@@ -1,11 +1,13 @@
 import json
 import os
-from typing import Optional
-from loguru import logger
 import sys
-from .model_utils import DeployedSktimeModel
 from pathlib import Path
+from typing import Optional
+
 import pandas as pd
+from loguru import logger
+
+from .model_utils import DeployedSktimeModel
 
 logger.remove()
 logger.add(sys.stderr, filter=__name__, level="DEBUG")
@@ -21,7 +23,7 @@ class LambdaInputError(Exception):
     """Raise if something wrong with the handler event input"""
 
 
-def lambda_handler(event: dict, context: Optional[dict] = None) -> str:
+def lambda_handler(event: dict, context=None) -> dict:
     """Entrypoint for lambda function
     Acts a distributor for different tasks depending on the
     supplied 'task' field"""
