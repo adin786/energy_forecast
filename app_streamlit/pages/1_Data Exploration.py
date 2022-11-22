@@ -34,6 +34,7 @@ def generate_processed_data():
 
 """
 # Data Exploration
+> *Page in progress*
 """
 
 ## Display some energy usage data
@@ -42,3 +43,15 @@ generate_processed_data()
 
 df = load_df(TRAIN_CSV)
 st.write(df)
+
+"""
+## More detail to be added here
+See notebooks in repo source for latest plots.  These are yet to be integrated into the streamlit app.
+- Timeseries plots
+- Seasonal plots
+- Seasonal subseries plots
+- ACF plots
+- Residual error plots
+- ...
+
+
