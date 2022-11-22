@@ -2,6 +2,7 @@ import streamlit as st
 
 """
 # Timeseries Forecasting Models
+> *Page in progress*
 """
 from pathlib import Path
 
@@ -35,3 +36,10 @@ st.image(str(PLOTS / "sarimax.png"))
 """### Exponential Smoothing
 Mean Absolute Percentage Error (MAPE) = 0.057"""
 st.image(str(PLOTS / "exp_smoothing.png"))
+
+"""
+---
+
+## More detail to be added here
+...
+"""
