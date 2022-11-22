@@ -30,7 +30,7 @@ The focus is on **minimal the time/effort to go from experimentation to a deploy
 
 ## Architecture diagram
 
-![Placeholder for architecture diagram]()
+![Placeholder for architecture diagram](assets/diagrams/arch_diagram.drawio.png)
 
 --- 
 
